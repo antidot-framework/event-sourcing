@@ -1,0 +1,48 @@
+{
+  "name": "antidot-fw/event-sourcing",
+  "license": "BSD-2.0",
+  "description": "An event sourcing patter base classes",
+  "autoload": {
+    "psr-4": {
+      "Antidot\\EventSource\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "AntidotTest\\EventSource\\": "test"
+    }
+  },
+  "require": {
+    "php": "^7.4.0",
+    "doctrine/dbal": "^2.10",
+    "infw/tactician-adapter": "dev-master",
+    "psr/event-dispatcher": "1.0.0",
+    "ramsey/uuid": "^4.0"
+  },
+  "require-dev": {
+    "phpro/grumphp": "^0.18.0",
+    "phpstan/phpstan": "^0.11.5",
+    "phpunit/phpunit": "^8.0",
+    "roave/security-advisories": "dev-master",
+    "squizlabs/php_codesniffer": "^3.4"
+  },
+  "scripts": {
+    "check-all": [
+      "@cs-check",
+      "@test",
+      "@inspect"
+    ],
+    "cs-check": "phpcs src --colors",
+    "cs-fix": "phpcbf src --colors",
+    "inspect": "phpstan analyse src -l7 --ansi",
+    "test": "phpunit --colors=always"
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "extra": {
+    "laminas": {
+      "config-provider": "Antidot\\EventSource\\Infrastructure\\Framework\\ConfigProvider"
+    }
+  }
+}
