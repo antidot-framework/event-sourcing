@@ -1,6 +1,6 @@
 {
   "name": "antidot-fw/event-sourcing",
-  "license": "BSD-2.0",
+  "license": "BSD-2-Clause",
   "description": "An event sourcing patter base classes",
   "autoload": {
     "psr-4": {
