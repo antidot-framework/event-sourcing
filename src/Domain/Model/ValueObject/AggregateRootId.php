@@ -8,7 +8,7 @@ abstract class AggregateRootId
 {
     protected string $aggregateIdd;
 
-    protected function __construct(string $id)
+    final protected function __construct(string $id)
     {
         $this->aggregateIdd = $id;
     }

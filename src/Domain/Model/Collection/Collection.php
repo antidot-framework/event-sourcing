@@ -12,29 +12,41 @@ use RuntimeException;
 
 abstract class Collection implements Countable, IteratorAggregate
 {
-    protected string $fqcn;
+    protected string $fqcn = '';
     protected array $items = [];
     protected bool $locked = false;
 
-    protected function __construct(array $items = [], bool $locked = true)
+    final protected function __construct(array $items = [], bool $locked = true)
     {
         $this->setFqcn();
+        /** @var object $item */
         foreach ($items as $item) {
             $this->addItem($item);
         }
         $this->locked = $locked;
     }
 
+    /**
+     * @param array $items
+     * @return static
+     */
     public static function createImmutableCollection(array $items)
     {
         return new static($items);
     }
 
+    /**
+     * @param array $items
+     * @return static
+     */
     public static function createMutableCollection(array $items = [])
     {
         return new static($items, false);
     }
 
+    /**
+     * @return static
+     */
     public static function createEmptyCollection()
     {
         return new static([], false);

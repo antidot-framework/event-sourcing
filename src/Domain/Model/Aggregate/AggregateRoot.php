@@ -12,7 +12,7 @@ abstract class AggregateRoot
     public const EVENT_MAP = [];
     protected array $events;
 
-    public function __construct()
+    final public function __construct()
     {
         $this->events = [];
     }
@@ -25,6 +25,10 @@ abstract class AggregateRoot
     public function popEvents(): EventCollection
     {
         $appliedEvents = [];
+        /**
+         * @var int $key
+         * @var AggregateChanged $event
+         */
         foreach ($this->events as $key => $event) {
             $this->apply($event);
             unset($this->events[$key]);
@@ -36,9 +40,11 @@ abstract class AggregateRoot
 
     public function apply(AggregateChanged $aggregateChanged): void
     {
+        /** @var array<string, string>  */
+        $eventMap = static::EVENT_MAP;
         $eventClass = get_class($aggregateChanged);
-        if (array_key_exists($eventClass, static::EVENT_MAP)) {
-            $method = static::EVENT_MAP[$eventClass];
+        if (array_key_exists($eventClass, $eventMap)) {
+            $method = $eventMap[$eventClass];
             $this->{$method}($aggregateChanged);
         }
     }

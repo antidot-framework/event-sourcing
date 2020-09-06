@@ -30,16 +30,25 @@ abstract class DbalAggregateRootRepository
         );
         $statement->bindValue('aggregate_id', $aggregateRootId->value());
         $statement->execute();
+        /** @var null|array $queryResult */
         $queryResult = $statement->fetchAll();
         /** @var AggregateRoot $aggregate */
         $aggregate = new $aggregateClass();
 
+        /** @var array<string, mixed> $item */
         foreach ($queryResult ?? [] as $item) {
-            $event = new $item['event_class'](
+            /** @var string $eventClass */
+            $eventClass = $item['event_class'];
+            /** @var string $payload */
+            $payload = $item['payload'];
+            /** @var string $occurredOn */
+            $occurredOn = $item['occurred_on'];
+            /** @var AggregateChanged $event */
+            $event = new $eventClass(
                 $item['event_id'],
                 $item['aggregate_id'],
-                json_decode($item['payload'], true, 16, JSON_THROW_ON_ERROR),
-                DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $item['occurred_on'])
+                json_decode($payload, true, 16, JSON_THROW_ON_ERROR),
+                DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $occurredOn)
             );
             $aggregate->apply($event);
         }

@@ -18,6 +18,7 @@ class DomainEventEmitter
 
     private function resetEvents(): void
     {
+        /** @var EventCollection events */
         $this->events = EventCollection::createEmptyCollection();
     }
 
