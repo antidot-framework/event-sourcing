@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace Antidot\EventSource\Infrastructure\Bus;
 
 use Antidot\EventSource\Application\Bus\QueryBus;
-use League\Tactician\CommandBus;
+use Antidot\Tactician\QueryBus as TacticianQueryBusAdapter;
 
 class TacticianQueryBus implements QueryBus
 {
-    private CommandBus $queryBus;
+    private TacticianQueryBusAdapter $queryBus;
 
-    public function __construct(CommandBus $commandBus)
+    public function __construct(TacticianQueryBusAdapter $queryBus)
     {
-        $this->queryBus = $commandBus;
+        $this->queryBus = $queryBus;
     }
 
-    public function __invoke(object $command): object
+    public function __invoke(object $query): object
     {
-        return $this->queryBus->handle($command);
+        return $this->queryBus->handle($query);
     }
 }

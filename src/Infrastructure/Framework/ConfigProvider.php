@@ -25,9 +25,6 @@ class ConfigProvider
                 'conditionals' => [
                     QueryBus::class => [
                         'class' => TacticianQueryBus::class,
-                        'arguments' => [
-                            'commandBus' => \InFw\TacticianAdapter\QueryBus::class,
-                        ]
                     ],
                 ]
             ]
