@@ -9,11 +9,12 @@ use InvalidArgumentException;
 use JsonSerializable;
 use Psr\EventDispatcher\StoppableEventInterface;
 use Ramsey\Uuid\Uuid;
+use RuntimeException;
 
 abstract class AggregateChanged implements StoppableEventInterface, JsonSerializable
 {
     protected const DATE_FORMAT = 'Y-m-d H:i:s';
-    protected const PROPERTIES =[
+    protected const PROPERTIES = [
         'aggregate_id',
         'payload',
         'occurred_on',
@@ -24,8 +25,12 @@ abstract class AggregateChanged implements StoppableEventInterface, JsonSerializ
     protected DateTimeImmutable $occurredOn;
     protected bool $stopped = false;
 
-    public function __construct(string $eventId, string $aggregateId, array $payload, DateTimeImmutable $occurredOn)
-    {
+    final public function __construct(
+        string $eventId,
+        string $aggregateId,
+        array $payload,
+        DateTimeImmutable $occurredOn
+    ) {
         $this->eventId = $eventId;
         $this->aggregateId = $aggregateId;
         $this->payload = $payload;
@@ -34,10 +39,17 @@ abstract class AggregateChanged implements StoppableEventInterface, JsonSerializ
 
     public static function occur(string $aggregateId, array $payload): self
     {
-        return new static(Uuid::uuid4()->toString(), $aggregateId, $payload, DateTimeImmutable::createFromFormat(
-            self::DATE_FORMAT,
-            date(self::DATE_FORMAT)
-        ));
+        $now = DateTimeImmutable::createFromFormat(self::DATE_FORMAT, date(self::DATE_FORMAT));
+        if (false === $now) {
+            throw new RuntimeException('Error ocurred obtaining datetime from server.');
+        }
+
+        return new static(
+            Uuid::uuid4()->toString(),
+            $aggregateId,
+            $payload,
+            $now
+        );
     }
 
     private static function assertValidSerialisedEvent(array $serializedEvent): void

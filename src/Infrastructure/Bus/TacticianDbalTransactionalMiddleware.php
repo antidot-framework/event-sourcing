@@ -22,6 +22,7 @@ class TacticianDbalTransactionalMiddleware implements Middleware
         $this->connection->beginTransaction();
 
         try {
+            /** @var mixed $result */
             $result = $next($command);
             $this->connection->commit();
         } catch (Throwable $exception) {
