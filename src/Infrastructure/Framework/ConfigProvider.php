@@ -13,21 +13,19 @@ use Antidot\EventSource\Infrastructure\Bus\TacticianQueryBus;
 
 class ConfigProvider
 {
+    public const DEPENDENCIES = [
+        'invokables' => [
+            CommandBus::class => TacticianCommandBus::class,
+            TacticianDbalTransactionalMiddleware::class => TacticianDbalTransactionalMiddleware::class,
+            TacticianDomainEventDispatcherMiddleware::class => TacticianDomainEventDispatcherMiddleware::class,
+            QueryBus::class => TacticianQueryBus::class,
+        ]
+    ];
+
     public function __invoke(): array
     {
         return [
-            'dependencies' => [
-                'invokables' => [
-                    CommandBus::class => TacticianCommandBus::class,
-                    TacticianDbalTransactionalMiddleware::class => TacticianDbalTransactionalMiddleware::class,
-                    TacticianDomainEventDispatcherMiddleware::class => TacticianDomainEventDispatcherMiddleware::class,
-                ],
-                'conditionals' => [
-                    QueryBus::class => [
-                        'class' => TacticianQueryBus::class,
-                    ],
-                ]
-            ]
+            'dependencies' => self::DEPENDENCIES,
         ];
     }
 }

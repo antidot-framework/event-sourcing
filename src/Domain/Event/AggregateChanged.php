@@ -13,6 +13,7 @@ use RuntimeException;
 
 abstract class AggregateChanged implements StoppableEventInterface, JsonSerializable
 {
+    protected const VERSION = 1;
     protected const DATE_FORMAT = 'Y-m-d H:i:s';
     protected const PROPERTIES = [
         'aggregate_id',
@@ -22,8 +23,9 @@ abstract class AggregateChanged implements StoppableEventInterface, JsonSerializ
     protected string $eventId;
     protected string $aggregateId;
     protected array $payload;
-    protected DateTimeImmutable $occurredOn;
+    protected int $version;
     protected bool $stopped = false;
+    protected DateTimeImmutable $occurredOn;
 
     final public function __construct(
         string $eventId,
@@ -35,6 +37,9 @@ abstract class AggregateChanged implements StoppableEventInterface, JsonSerializ
         $this->aggregateId = $aggregateId;
         $this->payload = $payload;
         $this->occurredOn = $occurredOn;
+        /** @var int $version */
+        $version = is_int(static::VERSION) ? static::VERSION : 1;
+        $this->version = $version;
     }
 
     public static function occur(string $aggregateId, array $payload): self
@@ -89,6 +94,11 @@ abstract class AggregateChanged implements StoppableEventInterface, JsonSerializ
         return $this->stopped;
     }
 
+    public function version(): int
+    {
+        return $this->version;
+    }
+
     public function jsonSerialize(): array
     {
         return [
@@ -96,6 +106,7 @@ abstract class AggregateChanged implements StoppableEventInterface, JsonSerializ
             'aggregate_id' => $this->aggregateId,
             'payload' => $this->payload,
             'occurred_on' => $this->occurredOn,
+            'version' => $this->version,
         ];
     }
 }
