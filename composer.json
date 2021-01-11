@@ -14,7 +14,7 @@
   },
   "require": {
     "php": "^7.4.0",
-    "antidot-fw/tactician": "^0.0.2",
+    "antidot-fw/tactician": "^0.0.3",
     "doctrine/dbal": "^2.10",
     "psr/event-dispatcher": "1.0.0",
     "ramsey/uuid": "^4.0"
